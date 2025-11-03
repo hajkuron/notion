@@ -5,13 +5,19 @@ from datetime import datetime, timedelta
 import re
 import os
 import sys
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Fix encoding for Windows
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding='utf-8')
 
 # Notion setup
-notion_secret = "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"
+notion_secret = os.getenv("NOTION_SECRET")
+if not notion_secret:
+    raise ValueError("NOTION_SECRET environment variable is not set. Please check your .env file.")
 notion = Client(auth=notion_secret)
 
 # Database IDs
@@ -424,6 +430,70 @@ def save_daily_chart_data(daily_scores_df, measures_df, output_dir="data"):
     
     print(f"✓ Created: {json_path}")
 
+def calculate_individual_task_scores(tasks_df):
+    """Calculate daily scores for each individual task"""
+    all_tasks = sorted(tasks_df['Task_Name'].unique())
+    task_data = {}
+    
+    for task_name in all_tasks:
+        task_df = tasks_df[tasks_df['Task_Name'] == task_name].copy()
+        
+        if task_df.empty:
+            continue
+        
+        # Get frequency goal
+        frequency = task_df['Frequency'].iloc[0]
+        goal = get_frequency_goal(frequency)
+        
+        if not goal:
+            continue
+        
+        task_weeks_data = {}
+        
+        # Process each week
+        for week_num in sorted(task_df['Week_Number'].unique()):
+            week_df = task_df[task_df['Week_Number'] == week_num].copy()
+            week_df = week_df.sort_values('Date')
+            
+            # Calculate cumulative score for each day
+            daily_scores = []
+            completed_count = 0
+            
+            for day_offset in range(7):  # Monday to Sunday
+                date = get_week_start_date(week_num) + timedelta(days=day_offset)
+                day_df = week_df[week_df['Date'] == date.date()]
+                
+                if not day_df.empty:
+                    completed_count += day_df['Completed'].sum()
+                
+                score = (completed_count / goal) * 100 if goal > 0 else 0
+                daily_scores.append(float(score))
+            
+            task_weeks_data[f"week_{week_num}"] = {
+                "weekNumber": int(week_num),
+                "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+                "scores": daily_scores,
+                "goal": goal,
+                "frequency": frequency
+            }
+        
+        task_data[task_name] = task_weeks_data
+    
+    return task_data
+
+def save_individual_tasks_data(tasks_df, output_dir="data"):
+    """Save individual task data as JSON"""
+    os.makedirs(output_dir, exist_ok=True)
+    
+    task_data = calculate_individual_task_scores(tasks_df)
+    
+    # Save to JSON
+    json_path = os.path.join(output_dir, "individual-tasks-data.json")
+    with open(json_path, 'w', encoding='utf-8') as f:
+        json.dump(task_data, f, indent=2)
+    
+    print(f"✓ Created: {json_path}")
+
 if __name__ == "__main__":
     # Part 1: Gather and transform data
     print("=" * 80)
@@ -446,5 +516,9 @@ if __name__ == "__main__":
     print("\nCreating daily charts data...")
     daily_scores_df = calculate_daily_category_scores(tasks_df)
     save_daily_chart_data(daily_scores_df, measures_df)
+    
+    # Create individual tasks data
+    print("\nCreating individual tasks data...")
+    save_individual_tasks_data(tasks_df)
     
     print("\nDone!")

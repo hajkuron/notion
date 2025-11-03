@@ -176,7 +176,7 @@ async function loadCombinedChart() {
                     },
                     y: {
                         beginAtZero: true,
-                        max: 110,
+                        max: 100,
                         grid: {
                             color: '#262626',
                             lineWidth: 1
