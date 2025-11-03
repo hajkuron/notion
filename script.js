@@ -230,10 +230,11 @@ async function loadDailyCharts() {
         
         // Create week selector buttons
         const weekSelector = document.getElementById('week-selector');
+        const lastWeekIndex = weekKeys.length - 1;
         weekKeys.forEach((weekKey, index) => {
             const weekData = dailyChartData[weekKey];
             const btn = document.createElement('button');
-            btn.className = `week-btn ${index === 0 ? 'active' : ''}`;
+            btn.className = `week-btn ${index === lastWeekIndex ? 'active' : ''}`;
             btn.textContent = `Week ${weekData.weekNumber}`;
             btn.dataset.weekKey = weekKey;
             btn.addEventListener('click', () => {
@@ -247,9 +248,9 @@ async function loadDailyCharts() {
             weekSelector.appendChild(btn);
         });
         
-        // Render first week by default
+        // Render latest week by default
         if (weekKeys.length > 0) {
-            renderDailyChart(weekKeys[0]);
+            renderDailyChart(weekKeys[lastWeekIndex]);
         }
         
         // Hide loading message

@@ -23,10 +23,11 @@ async function loadTasks() {
         
         // Create week selector buttons
         const weekSelector = document.getElementById('week-selector');
+        const lastWeekIndex = weekKeys.length - 1;
         weekKeys.forEach((weekKey, index) => {
             const weekData = firstTask[weekKey];
             const btn = document.createElement('button');
-            btn.className = `week-btn ${index === 0 ? 'active' : ''}`;
+            btn.className = `week-btn ${index === lastWeekIndex ? 'active' : ''}`;
             btn.textContent = `Week ${weekData.weekNumber}`;
             btn.dataset.weekKey = weekKey;
             btn.addEventListener('click', () => {
@@ -41,10 +42,10 @@ async function loadTasks() {
             weekSelector.appendChild(btn);
         });
         
-        // Render first week by default
+        // Render latest week by default
         if (weekKeys.length > 0) {
-            currentWeek = weekKeys[0];
-            renderTasksForWeek(weekKeys[0]);
+            currentWeek = weekKeys[lastWeekIndex];
+            renderTasksForWeek(weekKeys[lastWeekIndex]);
         }
     } catch (error) {
         console.error('Error loading tasks:', error);
