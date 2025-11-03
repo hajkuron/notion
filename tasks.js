@@ -46,9 +46,6 @@ async function loadTasks() {
             currentWeek = weekKeys[0];
             renderTasksForWeek(weekKeys[0]);
         }
-        
-        // Hide loading message
-        document.getElementById('tasks-container').innerHTML = '';
     } catch (error) {
         console.error('Error loading tasks:', error);
         document.getElementById('tasks-container').innerHTML = '<div class="loading">Error loading task data</div>';
@@ -97,124 +94,129 @@ function renderTasksForWeek(weekKey) {
         
         grid.appendChild(taskCard);
         
-        // Create chart
-        const ctx = document.getElementById(cardId).getContext('2d');
-        
-        // Determine color based on task category
-        const isGymTask = taskName.includes('Workout') || taskName.includes('Nutrition');
-        const lineColor = isGymTask ? '#3b82f6' : '#ef4444';
-        const bgColor = isGymTask ? 'rgba(59, 130, 246, 0.1)' : 'rgba(239, 68, 68, 0.1)';
-        
-        const chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: weekData.days,
-                datasets: [
-                    {
-                        label: 'Progress',
-                        data: weekData.scores,
-                        borderColor: lineColor,
-                        backgroundColor: bgColor,
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: lineColor,
-                        pointBorderColor: '#0a0a0a',
-                        pointBorderWidth: 1.5,
-                        tension: 0.4,
-                        fill: false
-                    },
-                    {
-                        label: 'Goal',
-                        data: weekData.days.map(() => 100),
-                        borderColor: '#525252',
-                        borderWidth: 1.5,
-                        borderDash: [5, 5],
-                        pointRadius: 0,
-                        tension: 0,
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false,
-                        backgroundColor: '#1f1f1f',
-                        borderColor: '#404040',
-                        borderWidth: 1,
-                        padding: 10,
-                        titleColor: '#ffffff',
-                        bodyColor: '#a3a3a3',
-                        callbacks: {
-                            label: function(context) {
-                                if (context.datasetIndex === 1) {
-                                    return 'Goal: 100%';
-                                }
-                                return Math.round(context.parsed.y) + '%';
-                            },
-                            filter: function(tooltipItem) {
-                                // Show tooltip for both datasets
-                                return true;
-                            }
+        // Create chart after DOM is updated
+        requestAnimationFrame(() => {
+            const canvas = document.getElementById(cardId);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Determine color based on task category
+            const isGymTask = taskName.includes('Workout') || taskName.includes('Nutrition');
+            const lineColor = isGymTask ? '#3b82f6' : '#ef4444';
+            const bgColor = isGymTask ? 'rgba(59, 130, 246, 0.1)' : 'rgba(239, 68, 68, 0.1)';
+
+            const chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: weekData.days,
+                    datasets: [
+                        {
+                            label: 'Progress',
+                            data: weekData.scores,
+                            borderColor: lineColor,
+                            backgroundColor: bgColor,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointBackgroundColor: lineColor,
+                            pointBorderColor: '#0a0a0a',
+                            pointBorderWidth: 1.5,
+                            tension: 0.4,
+                            fill: false
+                        },
+                        {
+                            label: 'Goal',
+                            data: weekData.days.map(() => 100),
+                            borderColor: '#525252',
+                            borderWidth: 1.5,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            tension: 0,
+                            fill: false
                         }
-                    }
+                    ]
                 },
-                scales: {
-                    x: {
-                        display: true,
-                        grid: {
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
                             display: false
                         },
-                        ticks: {
-                            font: {
-                                size: 10,
-                                weight: '500'
-                            },
-                            color: '#a3a3a3',
-                            padding: 6
-                        },
-                        border: {
-                            color: '#262626'
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#1f1f1f',
+                            borderColor: '#404040',
+                            borderWidth: 1,
+                            padding: 10,
+                            titleColor: '#ffffff',
+                            bodyColor: '#a3a3a3',
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.datasetIndex === 1) {
+                                        return 'Goal: 100%';
+                                    }
+                                    return Math.round(context.parsed.y) + '%';
+                                },
+                                filter: function(tooltipItem) {
+                                    // Show tooltip for both datasets
+                                    return true;
+                                }
+                            }
                         }
                     },
-                    y: {
-                        beginAtZero: true,
-                        max: 100,
-                        grid: {
-                            color: '#262626',
-                            lineWidth: 1
-                        },
-                        ticks: {
-                            stepSize: 25,
-                            font: {
-                                size: 10,
-                                weight: '500'
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                display: false
                             },
-                            color: '#a3a3a3',
-                            padding: 6,
-                            callback: function(value) {
-                                return value + '%';
+                            ticks: {
+                                font: {
+                                    size: 10,
+                                    weight: '500'
+                                },
+                                color: '#a3a3a3',
+                                padding: 6
+                            },
+                            border: {
+                                color: '#262626'
                             }
                         },
-                        border: {
-                            color: '#262626'
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: '#262626',
+                                lineWidth: 1
+                            },
+                            ticks: {
+                                stepSize: 25,
+                                font: {
+                                    size: 10,
+                                    weight: '500'
+                                },
+                                color: '#a3a3a3',
+                                padding: 6,
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            border: {
+                                color: '#262626'
+                            }
                         }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
                     }
-                },
-                interaction: {
-                    mode: 'index',
-                    intersect: false
                 }
-            }
+            });
+            
+            taskChartInstances[cardId] = chart;
         });
-        
-        taskChartInstances[cardId] = chart;
     });
 }
 
