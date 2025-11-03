@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #111111;
+            --bg-card: #161616;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --border-color: #262626;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --hover-bg: #1f1f1f;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 32px;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            transition: all 0.2s ease;
+        }
+        
+        .card:hover {
+            border-color: #404040;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+        
+        .week-selector {
+            display: flex;
+            gap: 8px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .week-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .week-btn:hover {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+        
+        .week-btn.active {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+        
+        .daily-chart-wrapper {
+            position: relative;
+            height: 400px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: #404040;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+            
+            .card {
+                padding: 24px;
+            }
+            
+            .chart-wrapper,
+            .daily-chart-wrapper {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section-title">Overview</div>
+        
+        <div id="combined-chart-container" class="card">
+            <div class="card-header">
+                <div class="card-title">Weekly Performance</div>
+            </div>
+            <div class="loading">Loading chart data...</div>
+            <div class="chart-wrapper">
+                <canvas id="combined-chart"></canvas>
+            </div>
+        </div>
+        
+        <div class="section-title">Daily Progress</div>
+        
+        <div id="daily-chart-container" class="card">
+            <div class="card-header">
+                <div class="card-title">Week Breakdown</div>
+                <div id="week-selector" class="week-selector"></div>
+            </div>
+            <div class="loading">Loading daily charts...</div>
+            <div class="daily-chart-wrapper">
+                <canvas id="daily-chart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

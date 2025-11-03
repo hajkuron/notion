@@ -1,0 +1,34 @@
+{
+  "weeks": [
+    "Week 1",
+    "Week 2"
+  ],
+  "gymTaskScores": [
+    44.285714285714285,
+    0.0
+  ],
+  "businessTaskScores": [
+    50.0,
+    0.0
+  ],
+  "gymMeasures": [
+    {
+      "week": "Week 1",
+      "score": 80.0
+    },
+    {
+      "week": "Week 2",
+      "score": 0.0
+    }
+  ],
+  "businessMeasures": [
+    {
+      "week": "Week 1",
+      "score": 80.0
+    },
+    {
+      "week": "Week 2",
+      "score": 0.0
+    }
+  ]
+}
