@@ -37,15 +37,15 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 40px 32px;
+            padding: 20px 24px;
         }
         
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 32px;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
             transition: all 0.2s ease;
         }
         
@@ -57,11 +57,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 16px;
         }
         
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
             letter-spacing: -0.3px;
@@ -69,19 +69,19 @@
         
         .week-selector {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             background: var(--bg-secondary);
-            padding: 4px;
+            padding: 3px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
         }
         
         .week-btn {
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: transparent;
             border: none;
             color: var(--text-secondary);
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 500;
             border-radius: 6px;
             cursor: pointer;
@@ -102,17 +102,17 @@
         
         .chart-wrapper {
             position: relative;
-            height: 400px;
+            height: 280px;
         }
         
         .daily-chart-wrapper {
             position: relative;
-            height: 400px;
+            height: 280px;
         }
         
         .loading {
             text-align: center;
-            padding: 60px 20px;
+            padding: 40px 20px;
             color: var(--text-secondary);
             font-size: 14px;
         }
@@ -151,26 +151,26 @@
         }
         
         .section-title {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         
         @media (max-width: 768px) {
             .container {
-                padding: 24px 16px;
+                padding: 16px;
             }
             
             .card {
-                padding: 24px;
+                padding: 16px;
             }
             
             .chart-wrapper,
             .daily-chart-wrapper {
-                height: 300px;
+                height: 240px;
             }
         }
     </style>

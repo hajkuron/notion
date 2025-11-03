@@ -19,8 +19,8 @@ async function loadCombinedChart() {
                 data: data.gymTaskScores,
                 borderColor: '#3b82f6',
                 backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderWidth: 2.5,
-                pointRadius: 6,
+                borderWidth: 2,
+                pointRadius: 5,
                 pointBackgroundColor: '#3b82f6',
                 pointBorderColor: '#0a0a0a',
                 pointBorderWidth: 2,
@@ -37,8 +37,8 @@ async function loadCombinedChart() {
                 data: data.businessTaskScores,
                 borderColor: '#ef4444',
                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                borderWidth: 2.5,
-                pointRadius: 6,
+                borderWidth: 2,
+                pointRadius: 5,
                 pointBackgroundColor: '#ef4444',
                 pointBorderColor: '#0a0a0a',
                 pointBorderWidth: 2,
@@ -73,7 +73,7 @@ async function loadCombinedChart() {
                 borderWidth: 0,
                 type: 'bar',
                 order: 0,
-                barThickness: 32,
+                barThickness: 28,
                 categoryPercentage: 0.7,
                 barPercentage: 0.6
             });
@@ -103,7 +103,7 @@ async function loadCombinedChart() {
                 borderWidth: 0,
                 type: 'bar',
                 order: 0,
-                barThickness: 32,
+                barThickness: 28,
                 categoryPercentage: 0.7,
                 barPercentage: 0.6
             });
@@ -124,10 +124,10 @@ async function loadCombinedChart() {
                         position: 'top',
                         labels: {
                             font: {
-                                size: 12,
+                                size: 11,
                                 weight: '500'
                             },
-                            padding: 16,
+                            padding: 10,
                             usePointStyle: true,
                             color: '#a3a3a3',
                             pointStyle: 'circle'
@@ -164,11 +164,11 @@ async function loadCombinedChart() {
                         },
                         ticks: {
                             font: {
-                                size: 12,
+                                size: 11,
                                 weight: '500'
                             },
                             color: '#a3a3a3',
-                            padding: 12
+                            padding: 8
                         },
                         border: {
                             color: '#262626'
@@ -184,11 +184,11 @@ async function loadCombinedChart() {
                         ticks: {
                             stepSize: 20,
                             font: {
-                                size: 12,
+                                size: 11,
                                 weight: '500'
                             },
                             color: '#a3a3a3',
-                            padding: 12,
+                            padding: 8,
                             callback: function(value) {
                                 return value + '%';
                             }
