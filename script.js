@@ -1,6 +1,53 @@
 let dailyChartInstance = null;
 let dailyChartData = null;
 
+// Helper function to get current week number and day index
+function getCurrentWeekAndDay() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    
+    // Calculate week number (assuming week starts on Monday)
+    // Get Monday of current week
+    const monday = new Date(today);
+    const day = monday.getDay();
+    const diff = monday.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+    monday.setDate(diff);
+    
+    // Set to start of week (Monday, 00:00:00)
+    monday.setHours(0, 0, 0, 0);
+    
+    // Get a reference date (you may need to adjust this based on when week 1 started)
+    // For now, we'll calculate week number based on a known start date
+    // Assuming week 1 started on a specific Monday - you may need to adjust this
+    const referenceDate = new Date('2024-01-01'); // Adjust this to your actual week 1 start date
+    const referenceMonday = new Date(referenceDate);
+    const refDay = referenceMonday.getDay();
+    const refDiff = referenceMonday.getDate() - refDay + (refDay === 0 ? -6 : 1);
+    referenceMonday.setDate(refDiff);
+    referenceMonday.setHours(0, 0, 0, 0);
+    
+    // Calculate week number (weeks since reference Monday + 1)
+    const weeksDiff = Math.floor((monday - referenceMonday) / (7 * 24 * 60 * 60 * 1000)) + 1;
+    
+    // Convert day of week: Sunday=0 -> 6, Monday=1 -> 0, Tuesday=2 -> 1, etc.
+    // So Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    
+    return { weekNumber: weeksDiff, dayIndex: dayIndex };
+}
+
+// Helper function to check if a week is the current week and get data cutoff
+function getDataCutoffIndex(weekNumber, isLatestWeek) {
+    // If this is the latest week (current week), only show data up to today
+    if (isLatestWeek) {
+        const { dayIndex: currentDayIndex } = getCurrentWeekAndDay();
+        return currentDayIndex; // inclusive, so 0-based index means include day 0
+    }
+    
+    // For past weeks, return 6 (include all days)
+    return 6;
+}
+
 // Fetch and render combined chart
 async function loadCombinedChart() {
     try {
@@ -228,6 +275,9 @@ async function loadDailyCharts() {
             return numA - numB;
         });
         
+        // Store latest week key for comparison
+        const latestWeekKey = weekKeys[weekKeys.length - 1];
+        
         // Create week selector buttons
         const weekSelector = document.getElementById('week-selector');
         const lastWeekIndex = weekKeys.length - 1;
@@ -243,14 +293,14 @@ async function loadDailyCharts() {
                 btn.classList.add('active');
                 
                 // Render chart for selected week
-                renderDailyChart(weekKey);
+                renderDailyChart(weekKey, weekKey === latestWeekKey);
             });
             weekSelector.appendChild(btn);
         });
         
         // Render latest week by default
         if (weekKeys.length > 0) {
-            renderDailyChart(weekKeys[lastWeekIndex]);
+            renderDailyChart(weekKeys[lastWeekIndex], true);
         }
         
         // Hide loading message
@@ -262,7 +312,7 @@ async function loadDailyCharts() {
 }
 
 // Render daily chart for a specific week
-function renderDailyChart(weekKey) {
+function renderDailyChart(weekKey, isLatestWeek = false) {
     const weekData = dailyChartData[weekKey];
     const ctx = document.getElementById('daily-chart').getContext('2d');
     
@@ -271,13 +321,30 @@ function renderDailyChart(weekKey) {
         dailyChartInstance.destroy();
     }
     
+    // Check if this is the current week and get cutoff index
+    const cutoffIndex = getDataCutoffIndex(weekData.weekNumber, isLatestWeek);
+    
+    // Helper function to truncate data array after cutoff index
+    const truncateData = (dataArray) => {
+        if (cutoffIndex >= 6) {
+            // Past week or full week, return all data
+            return dataArray;
+        }
+        // Current week, truncate after today (inclusive)
+        const truncated = [...dataArray];
+        for (let i = cutoffIndex + 1; i < truncated.length; i++) {
+            truncated[i] = null;
+        }
+        return truncated;
+    };
+    
     const datasets = [];
     
     // Gym scores line
     if (weekData.gymScores && weekData.gymScores.length > 0) {
         datasets.push({
             label: 'Gym Task Score',
-            data: weekData.gymScores,
+            data: truncateData(weekData.gymScores),
             borderColor: '#3b82f6',
             backgroundColor: 'rgba(59, 130, 246, 0.1)',
             borderWidth: 2.5,
@@ -287,7 +354,8 @@ function renderDailyChart(weekKey) {
             pointBorderWidth: 2,
             tension: 0.4,
             type: 'line',
-            fill: false
+            fill: false,
+            spanGaps: false
         });
     }
     
@@ -295,7 +363,7 @@ function renderDailyChart(weekKey) {
     if (weekData.businessScores && weekData.businessScores.length > 0) {
         datasets.push({
             label: 'Business Task Score',
-            data: weekData.businessScores,
+            data: truncateData(weekData.businessScores),
             borderColor: '#ef4444',
             backgroundColor: 'rgba(239, 68, 68, 0.1)',
             borderWidth: 2.5,
@@ -306,14 +374,19 @@ function renderDailyChart(weekKey) {
             pointStyle: 'rect',
             tension: 0.4,
             type: 'line',
-            fill: false
+            fill: false,
+            spanGaps: false
         });
     }
     
     // Gym measure bar (on Sunday, day 6)
+    // Only show if it's past week or if today is Sunday or later
     if (weekData.gymMeasureScore !== null && weekData.gymMeasureScore !== undefined) {
         const gymBarData = new Array(7).fill(null);
-        gymBarData[6] = weekData.gymMeasureScore;
+        // Only show bar if it's a past week or if today is Sunday (day index 6)
+        if (cutoffIndex >= 6) {
+            gymBarData[6] = weekData.gymMeasureScore;
+        }
         
         datasets.push({
             label: 'Gym Measure Score',
@@ -336,9 +409,13 @@ function renderDailyChart(weekKey) {
     }
     
     // Business measure bar (on Sunday, day 6)
+    // Only show if it's past week or if today is Sunday or later
     if (weekData.businessMeasureScore !== null && weekData.businessMeasureScore !== undefined) {
         const businessBarData = new Array(7).fill(null);
-        businessBarData[6] = weekData.businessMeasureScore;
+        // Only show bar if it's a past week or if today is Sunday (day index 6)
+        if (cutoffIndex >= 6) {
+            businessBarData[6] = weekData.businessMeasureScore;
+        }
         
         datasets.push({
             label: 'Business Measure Score',

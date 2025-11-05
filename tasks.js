@@ -2,6 +2,53 @@ let tasksData = null;
 let taskChartInstances = {};
 let currentWeek = null;
 
+// Helper function to get current week number and day index
+function getCurrentWeekAndDay() {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    
+    // Calculate week number (assuming week starts on Monday)
+    // Get Monday of current week
+    const monday = new Date(today);
+    const day = monday.getDay();
+    const diff = monday.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is Sunday
+    monday.setDate(diff);
+    
+    // Set to start of week (Monday, 00:00:00)
+    monday.setHours(0, 0, 0, 0);
+    
+    // Get a reference date (you may need to adjust this based on when week 1 started)
+    // For now, we'll calculate week number based on a known start date
+    // Assuming week 1 started on a specific Monday - you may need to adjust this
+    const referenceDate = new Date('2024-01-01'); // Adjust this to your actual week 1 start date
+    const referenceMonday = new Date(referenceDate);
+    const refDay = referenceMonday.getDay();
+    const refDiff = referenceMonday.getDate() - refDay + (refDay === 0 ? -6 : 1);
+    referenceMonday.setDate(refDiff);
+    referenceMonday.setHours(0, 0, 0, 0);
+    
+    // Calculate week number (weeks since reference Monday + 1)
+    const weeksDiff = Math.floor((monday - referenceMonday) / (7 * 24 * 60 * 60 * 1000)) + 1;
+    
+    // Convert day of week: Sunday=0 -> 6, Monday=1 -> 0, Tuesday=2 -> 1, etc.
+    // So Mon=0, Tue=1, Wed=2, Thu=3, Fri=4, Sat=5, Sun=6
+    const dayIndex = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    
+    return { weekNumber: weeksDiff, dayIndex: dayIndex };
+}
+
+// Helper function to check if a week is the current week and get data cutoff
+function getDataCutoffIndex(weekNumber, isLatestWeek) {
+    // If this is the latest week (current week), only show data up to today
+    if (isLatestWeek) {
+        const { dayIndex: currentDayIndex } = getCurrentWeekAndDay();
+        return currentDayIndex; // inclusive, so 0-based index means include day 0
+    }
+    
+    // For past weeks, return 6 (include all days)
+    return 6;
+}
+
 // Fetch and setup tasks with week switching
 async function loadTasks() {
     try {
@@ -21,6 +68,9 @@ async function loadTasks() {
             return numA - numB;
         });
         
+        // Store latest week key for comparison
+        const latestWeekKey = weekKeys[weekKeys.length - 1];
+        
         // Create week selector buttons
         const weekSelector = document.getElementById('week-selector');
         const lastWeekIndex = weekKeys.length - 1;
@@ -37,7 +87,7 @@ async function loadTasks() {
                 
                 // Render charts for selected week
                 currentWeek = weekKey;
-                renderTasksForWeek(weekKey);
+                renderTasksForWeek(weekKey, weekKey === latestWeekKey);
             });
             weekSelector.appendChild(btn);
         });
@@ -45,7 +95,7 @@ async function loadTasks() {
         // Render latest week by default
         if (weekKeys.length > 0) {
             currentWeek = weekKeys[lastWeekIndex];
-            renderTasksForWeek(weekKeys[lastWeekIndex]);
+            renderTasksForWeek(weekKeys[lastWeekIndex], true);
         }
     } catch (error) {
         console.error('Error loading tasks:', error);
@@ -54,7 +104,7 @@ async function loadTasks() {
 }
 
 // Render all task charts for a specific week
-function renderTasksForWeek(weekKey) {
+function renderTasksForWeek(weekKey, isLatestWeek = false) {
     const container = document.getElementById('tasks-container');
     
     // Destroy existing charts
@@ -73,6 +123,30 @@ function renderTasksForWeek(weekKey) {
     
     // Get task names sorted
     const taskNames = Object.keys(tasksData).sort();
+    
+    // Get cutoff index for this week
+    let cutoffIndex = 6; // Default to show all days
+    if (taskNames.length > 0) {
+        const firstTask = tasksData[taskNames[0]];
+        const weekData = firstTask[weekKey];
+        if (weekData) {
+            cutoffIndex = getDataCutoffIndex(weekData.weekNumber, isLatestWeek);
+        }
+    }
+    
+    // Helper function to truncate data array after cutoff index
+    const truncateData = (dataArray) => {
+        if (cutoffIndex >= 6) {
+            // Past week or full week, return all data
+            return dataArray;
+        }
+        // Current week, truncate after today (inclusive)
+        const truncated = [...dataArray];
+        for (let i = cutoffIndex + 1; i < truncated.length; i++) {
+            truncated[i] = null;
+        }
+        return truncated;
+    };
     
     taskNames.forEach(taskName => {
         const taskWeeks = tasksData[taskName];
@@ -114,7 +188,7 @@ function renderTasksForWeek(weekKey) {
                     datasets: [
                         {
                             label: 'Progress',
-                            data: weekData.scores,
+                            data: truncateData(weekData.scores),
                             borderColor: lineColor,
                             backgroundColor: bgColor,
                             borderWidth: 2,
@@ -123,7 +197,8 @@ function renderTasksForWeek(weekKey) {
                             pointBorderColor: '#0a0a0a',
                             pointBorderWidth: 1.5,
                             tension: 0.4,
-                            fill: false
+                            fill: false,
+                            spanGaps: false
                         },
                         {
                             label: 'Goal',
