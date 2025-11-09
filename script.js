@@ -249,7 +249,42 @@ async function loadCombinedChart() {
                     mode: 'index',
                     intersect: false
                 }
-            }
+            },
+            plugins: [{
+                id: 'horizontalLine80',
+                afterDraw: (chart) => {
+                    const ctx = chart.ctx;
+                    const yAxis = chart.scales.y;
+                    const y80 = yAxis.getPixelForValue(80);
+                    
+                    ctx.save();
+                    // Draw a subtle shadow/glow effect
+                    ctx.strokeStyle = 'rgba(34, 197, 94, 0.2)';
+                    ctx.lineWidth = 4;
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, y80);
+                    ctx.lineTo(chart.chartArea.right, y80);
+                    ctx.stroke();
+                    
+                    // Draw the main goal line
+                    ctx.strokeStyle = '#22c55e';
+                    ctx.lineWidth = 2.5;
+                    ctx.setLineDash([]); // Solid line
+                    ctx.beginPath();
+                    ctx.moveTo(chart.chartArea.left, y80);
+                    ctx.lineTo(chart.chartArea.right, y80);
+                    ctx.stroke();
+                    
+                    // Add label above the line
+                    ctx.fillStyle = '#22c55e';
+                    ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, sans-serif';
+                    ctx.textAlign = 'right';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillText('80% Goal', chart.chartArea.right - 8, y80 - 6);
+                    
+                    ctx.restore();
+                }
+            }]
         });
         
         // Hide loading message
@@ -530,7 +565,42 @@ function renderDailyChart(weekKey, isLatestWeek = false) {
                 mode: 'index',
                 intersect: false
             }
-        }
+        },
+        plugins: [{
+            id: 'horizontalLine80',
+            afterDraw: (chart) => {
+                const ctx = chart.ctx;
+                const yAxis = chart.scales.y;
+                const y80 = yAxis.getPixelForValue(80);
+                
+                ctx.save();
+                // Draw a subtle shadow/glow effect
+                ctx.strokeStyle = 'rgba(34, 197, 94, 0.2)';
+                ctx.lineWidth = 4;
+                ctx.beginPath();
+                ctx.moveTo(chart.chartArea.left, y80);
+                ctx.lineTo(chart.chartArea.right, y80);
+                ctx.stroke();
+                
+                // Draw the main goal line
+                ctx.strokeStyle = '#22c55e';
+                ctx.lineWidth = 2.5;
+                ctx.setLineDash([]); // Solid line
+                ctx.beginPath();
+                ctx.moveTo(chart.chartArea.left, y80);
+                ctx.lineTo(chart.chartArea.right, y80);
+                ctx.stroke();
+                
+                // Add label above the line
+                ctx.fillStyle = '#22c55e';
+                ctx.font = 'bold 11px -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, sans-serif';
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText('80% Goal', chart.chartArea.right - 8, y80 - 6);
+                
+                ctx.restore();
+            }
+        }]
     });
 }
 
