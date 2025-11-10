@@ -45,6 +45,29 @@
       ],
       "goal": 4,
       "frequency": "4 Times"
+    },
+    "week_3": {
+      "weekNumber": 3,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "goal": 4,
+      "frequency": "4 Times"
     }
   },
   "Short workout": {
@@ -90,6 +113,29 @@
         28.57142857142857,
         28.57142857142857,
         28.57142857142857
+      ],
+      "goal": 7,
+      "frequency": "Daily"
+    },
+    "week_3": {
+      "weekNumber": 3,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
       ],
       "goal": 7,
       "frequency": "Daily"
@@ -141,6 +187,29 @@
       ],
       "goal": 4,
       "frequency": "4 Times"
+    },
+    "week_3": {
+      "weekNumber": 3,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "goal": 4,
+      "frequency": "4 Times"
     }
   },
   "\ud83d\udc5f Workout": {
@@ -189,6 +258,29 @@
       ],
       "goal": 5,
       "frequency": "5 Times"
+    },
+    "week_3": {
+      "weekNumber": 3,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "goal": 5,
+      "frequency": "5 Times"
     }
   },
   "\ud83d\udc8a Nutrition/supplements": {
@@ -234,6 +326,29 @@
         14.285714285714285,
         28.57142857142857,
         42.857142857142854
+      ],
+      "goal": 7,
+      "frequency": "Daily"
+    },
+    "week_3": {
+      "weekNumber": 3,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
       ],
       "goal": 7,
       "frequency": "Daily"

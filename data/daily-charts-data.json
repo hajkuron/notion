@@ -62,5 +62,37 @@
     ],
     "gymMeasureScore": 0.0,
     "businessMeasureScore": 52.5
+  },
+  "week_3": {
+    "weekNumber": 3,
+    "days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
+    "gymScores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "businessScores": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "gymMeasureScore": 0.0,
+    "businessMeasureScore": 0.0
   }
 }
