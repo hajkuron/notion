@@ -68,6 +68,29 @@
       ],
       "goal": 4,
       "frequency": "4 Times"
+    },
+    "week_4": {
+      "weekNumber": 4,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "goal": 4,
+      "frequency": "4 Times"
     }
   },
   "Short workout": {
@@ -139,6 +162,29 @@
       ],
       "goal": 7,
       "frequency": "Daily"
+    },
+    "week_4": {
+      "weekNumber": 4,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "goal": 7,
+      "frequency": "Daily"
     }
   },
   "Work on project 1 hours a day": {
@@ -205,8 +251,31 @@
         0.0,
         25.0,
         50.0,
-        50.0,
-        50.0
+        75.0,
+        75.0
+      ],
+      "goal": 4,
+      "frequency": "4 Times"
+    },
+    "week_4": {
+      "weekNumber": 4,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
       ],
       "goal": 4,
       "frequency": "4 Times"
@@ -276,8 +345,31 @@
         60.0,
         80.0,
         100.0,
-        100.0,
-        100.0
+        120.0,
+        140.0
+      ],
+      "goal": 5,
+      "frequency": "5 Times"
+    },
+    "week_4": {
+      "weekNumber": 4,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
       ],
       "goal": 5,
       "frequency": "5 Times"
@@ -347,8 +439,31 @@
         14.285714285714285,
         14.285714285714285,
         14.285714285714285,
-        14.285714285714285,
-        14.285714285714285
+        28.57142857142857,
+        42.857142857142854
+      ],
+      "goal": 7,
+      "frequency": "Daily"
+    },
+    "week_4": {
+      "weekNumber": 4,
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "scores": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
       ],
       "goal": 7,
       "frequency": "Daily"
